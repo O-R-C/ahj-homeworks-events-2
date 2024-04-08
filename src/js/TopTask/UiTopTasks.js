@@ -3,7 +3,7 @@ import { createElement } from './utility'
 /**
  * Создает элементы для интерфейса списка задач
  */
-export default class UiTopTask {
+export default class UiTopTasks {
   constructor() {
     this.createElement = createElement
 

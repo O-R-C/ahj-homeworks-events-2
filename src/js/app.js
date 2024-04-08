@@ -1,2 +1,2 @@
-import TopTask from './TopTask/TopTask'
+import TopTask from './TopTask/TopTasks'
 console.log(new TopTask())
