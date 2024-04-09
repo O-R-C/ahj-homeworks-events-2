@@ -11,7 +11,6 @@ export default class TopTasks {
   constructor() {
     this.ui = new UiTopTasks()
     this.wrapper = this.ui.wrapper
-    this.container = this.ui.createElement(styles.container)
   }
 
   init() {
@@ -25,6 +24,7 @@ export default class TopTasks {
   renderUI() {
     const body = document.body
     const appElement = this.ui.createElement(styles.app)
+    const container = this.ui.createElement(styles.container)
 
     this.sectionField = this.ui.getField()
     this.sectionPinned = this.ui.getPinned()
@@ -34,8 +34,8 @@ export default class TopTasks {
     appElement.append(this.sectionPinned)
     appElement.append(this.sectionAllTasks)
 
-    this.container.append(this.ui.wrapper.getWrapper(appElement))
-    body.append(this.container)
+    container.append(this.ui.wrapper.getWrapper(appElement))
+    body.append(container)
   }
 
   /**
