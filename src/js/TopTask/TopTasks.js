@@ -1,4 +1,5 @@
 import UiTopTasks from './UiTopTasks'
+import Wrapper from '../Wrapper/Wrapper'
 import styles from './TopTasks.module.css'
 
 /**
@@ -10,9 +11,8 @@ export default class TopTasks {
 
   constructor() {
     this.ui = new UiTopTasks()
+    this.wrapper = new Wrapper()
     this.container = this.ui.createElement(styles.container)
-
-    this.init()
   }
 
   init() {
@@ -21,11 +21,18 @@ export default class TopTasks {
   }
 
   renderUI() {
-    this.fieldSection = this.ui.getField()
-    const appElement = this.ui.createElement(styles.app)
-    appElement.append(this.fieldSection)
-    this.container.append(appElement)
     const body = document.body
+    const appElement = this.ui.createElement(styles.app)
+
+    this.sectionField = this.ui.getField()
+    this.sectionPinned = this.ui.getPinned()
+    this.sectionAllTasks = this.ui.getAllTasks()
+
+    appElement.append(this.sectionField)
+    appElement.append(this.sectionPinned)
+    appElement.append(this.sectionAllTasks)
+
+    this.container.append(this.wrapper.getWrapper(appElement))
     body.append(this.container)
   }
 

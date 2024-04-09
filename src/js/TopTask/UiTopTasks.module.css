@@ -1,0 +1,38 @@
+.sectionField {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+.sectionPinned {
+  width: 100%;
+}
+
+.sectionAllTasks {
+  width: 100%;
+}
+
+.section {
+  width: 100%;
+}
+
+.section input {
+  width: 500px;
+  padding: 10px;
+  font-size: 20px;
+
+  border: 2px solid gray;
+  border-radius: 5px;
+}
+/* 
+.field {
+  width: 500px;
+} */
+
+.child {
+  margin-bottom: 20px;
+}
+
+.content {
+  min-height: 50px;
+}

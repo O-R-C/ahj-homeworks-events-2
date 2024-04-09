@@ -1,2 +1,4 @@
 import TopTask from './TopTask/TopTasks'
-console.log(new TopTask())
+
+const topTask = new TopTask()
+topTask.init()
