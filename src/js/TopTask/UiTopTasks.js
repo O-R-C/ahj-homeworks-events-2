@@ -7,8 +7,8 @@ import styles from './UiTopTasks.module.css'
  */
 export default class UiTopTasks {
   _field = { className: 'field', type: 'input' }
-  _pinned = { className: 'pinned', type: 'h2', textContent: 'Pinned:' }
-  _allTasks = { className: 'allTasks', type: 'h2', textContent: 'All Tasks:' }
+  _pinned = { className: 'pinned', type: 'h2', textContent: 'Pinned' }
+  _allTasks = { className: 'allTasks', type: 'h2', textContent: 'All Tasks' }
 
   constructor() {
     this.createElement = createElement
@@ -46,14 +46,23 @@ export default class UiTopTasks {
     return styles[`section${newName}`]
   }
 
+  /**
+   * @returns секцию поля ввода
+   */
   getField() {
     return this.createSection(this._field)
   }
 
+  /**
+   * @returns секцию Pinned
+   */
   getPinned() {
     return this.createSection(this._pinned)
   }
 
+  /**
+   * @returns секцию All Tasks
+   */
   getAllTasks() {
     return this.createSection(this._allTasks)
   }

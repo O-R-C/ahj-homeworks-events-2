@@ -1,5 +1,4 @@
 import UiTopTasks from './UiTopTasks'
-import Wrapper from '../Wrapper/Wrapper'
 import styles from './TopTasks.module.css'
 
 /**
@@ -11,7 +10,7 @@ export default class TopTasks {
 
   constructor() {
     this.ui = new UiTopTasks()
-    this.wrapper = new Wrapper()
+    this.wrapper = this.ui.wrapper
     this.container = this.ui.createElement(styles.container)
   }
 
@@ -20,6 +19,9 @@ export default class TopTasks {
     this.renderUI()
   }
 
+  /**
+   * Отображает элементы приложения на странице
+   */
   renderUI() {
     const body = document.body
     const appElement = this.ui.createElement(styles.app)
@@ -32,12 +34,12 @@ export default class TopTasks {
     appElement.append(this.sectionPinned)
     appElement.append(this.sectionAllTasks)
 
-    this.container.append(this.wrapper.getWrapper(appElement))
+    this.container.append(this.ui.wrapper.getWrapper(appElement))
     body.append(this.container)
   }
 
   /**
-   * Показывает заголовки на странице
+   * Отображает заголовки на странице
    */
   showTitle() {
     this.ui.showTitle('Top Tasks')
