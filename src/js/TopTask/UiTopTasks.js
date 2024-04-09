@@ -1,5 +1,7 @@
 import { createElement } from '../utility'
 import Wrapper from '../Wrapper/Wrapper'
+import CreateTask from './CreatingElements/CreateTask'
+import CreateSection from './CreatingElements/CreateSection'
 import styles from './UiTopTasks.module.css'
 
 /**
@@ -11,60 +13,40 @@ export default class UiTopTasks {
   _allTasks = { className: 'allTasks', type: 'h2', textContent: 'All Tasks' }
 
   constructor() {
-    this.createElement = createElement
     this.wrapper = new Wrapper()
-  }
-
-  /**
-   * Создает секцию
-   * @param {Object} param0 описание элемента
-   * @returns элемент
-   */
-  createSection({ className, type, textContent }) {
-    const section = this.createElement([styles.section, this.getClassName(className)])
-    const content = this.createElement(styles.content)
-    const child = this.createElement([className, styles.child], type)
-    textContent && (child.textContent = textContent)
-
-    section.append(child)
-    type !== 'input' && section.append(this.wrapper.getWrapper(content))
-
-    return section
-  }
-
-  /**
-   * Делает первую буквы имени класса заглавной
-   * @param {string} className имя класса
-   * @returns имя класса с заглавной буквы
-   */
-  getClassName(className) {
-    const newName = [...className].reduce((acc, char, index) => {
-      if (index === 0) return acc + char.toUpperCase()
-      return acc + char
-    }, '')
-
-    return styles[`section${newName}`]
+    this.createElement = createElement
+    this.createTask = new CreateTask()
+    this.createSection = new CreateSection()
   }
 
   /**
    * @returns секцию поля ввода
    */
   getField() {
-    return this.createSection(this._field)
+    return this.createSection.getSection(this._field)
   }
 
   /**
    * @returns секцию Pinned
    */
   getPinned() {
-    return this.createSection(this._pinned)
+    return this.createSection.getSection(this._pinned, this.wrapper)
   }
 
   /**
    * @returns секцию All Tasks
    */
   getAllTasks() {
-    return this.createSection(this._allTasks)
+    return this.createSection.getSection(this._allTasks, this.wrapper)
+  }
+
+  /**
+   * @param {string} title текст задачи
+   * @returns задачу
+   */
+  getTask(title) {
+    console.log('🚀 ~ UiTopTasks ~ getTask ~ title:', title)
+    return this.createTask.getTask(title)
   }
 
   /**
