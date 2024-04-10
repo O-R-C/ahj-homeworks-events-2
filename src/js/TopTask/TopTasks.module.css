@@ -21,3 +21,7 @@
 .sectionAllTasks {
   width: 100%;
 }
+
+.noTasks {
+  color: #a0a0a0;
+}

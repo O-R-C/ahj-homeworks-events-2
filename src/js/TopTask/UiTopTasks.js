@@ -1,4 +1,4 @@
-import { createElement } from '../utility'
+import CreateElement from './CreatingElements/CreateElement'
 import Wrapper from '../Wrapper/Wrapper'
 import CreateTask from './CreatingElements/CreateTask'
 import CreateSection from './CreatingElements/CreateSection'
@@ -14,9 +14,9 @@ export default class UiTopTasks {
 
   constructor() {
     this.wrapper = new Wrapper()
-    this.createElement = createElement
     this.createTask = new CreateTask()
     this.createSection = new CreateSection()
+    this.createElement = new CreateElement()
   }
 
   /**
@@ -45,8 +45,35 @@ export default class UiTopTasks {
    * @returns задачу
    */
   getTask(title) {
-    console.log('🚀 ~ UiTopTasks ~ getTask ~ title:', title)
     return this.createTask.getTask(title)
+  }
+
+  getTasks(tasks) {
+    const ttt = tasks.reduce((acc, task) => [...acc, this.getTask(task)], [])
+    console.log('🚀 ~ UiTopTasks ~ getTasks ~ ttt:', ttt)
+    return ttt
+  }
+
+  /**
+   * Возвращает элемент с указанным типом и классом\классами
+   * @param {string | string[]} className имя класса или массив имен
+   * @param {string} type тип элемента
+   * @returns созданный элемент
+   */
+  getElement(className, type) {
+    return this.createElement.getElement(className, type)
+  }
+
+  /**
+   * Возвращает элемент с переданным сообщением
+   * @param {string} className имя класса
+   * @param {string} title текст сообщения
+   * @returns элемент
+   */
+  getNoTasksElement(className, title) {
+    const element = this.createElement.getElement(className)
+    element.textContent = title
+    return element
   }
 
   /**

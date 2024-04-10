@@ -11,13 +11,11 @@ export default class TopTasks {
 
   constructor() {
     this.ui = new UiTopTasks()
-    this.task = new Task()
-    this.wrapper = this.ui.wrapper
   }
 
   init() {
     this.showTitle()
-    this.renderUI()
+    this.addUI()
     this.addContentElements()
     this.addListeners()
   }
@@ -25,10 +23,10 @@ export default class TopTasks {
   /**
    * Отображает элементы приложения на странице
    */
-  renderUI() {
+  addUI() {
     const body = document.body
-    const appElement = this.ui.createElement(styles.app)
-    const container = this.ui.createElement(styles.container)
+    const appElement = this.ui.getElement(styles.app)
+    const container = this.ui.getElement(styles.container)
 
     this.sectionField = this.ui.getField()
     this.sectionPinned = this.ui.getPinned()
@@ -47,7 +45,7 @@ export default class TopTasks {
     this.pinnedContent = this.sectionPinned.querySelector('[class^="content"]')
     this.allTasksContent = this.sectionAllTasks.querySelector('[class^="content"]')
 
-    this.showNoPinned()
+    this.render()
   }
 
   addListeners() {
@@ -90,14 +88,79 @@ export default class TopTasks {
     setTimeout(() => (this.field.placeholder = ''), 1000)
   }
 
-  showNoPinned() {
-    this.pinnedContent.append(this.ui.getTask('No pinned tasks'))
+  /**
+   * Добавляет задачу в массив this.allTasks
+   */
+  addTask() {
+    this.allTask.push(new Task(this.fieldValue))
+    this.clearField()
+    this.render()
   }
 
-  addTask() {
-    this.allTask.push(this.task.getTask(this.fieldValue))
-    console.log(this.allTask)
-    this.clearField()
+  /**
+   * Отображает на странице данные из массива задач this.allTasks
+   */
+  render() {
+    this.cleanTasksContent()
+    const { pinned, unPinned } = this.getSortedTask()
+    // const pinnedContent = pinned.length ?
+
+    pinned.length ? this.showPinnedTasks(pinned) : this.showNoPinned()
+    unPinned.length ? this.showUnPinnedTasks(unPinned) : this.showNoTasks()
+  }
+
+  /**
+   * @returns объект {pinned, unPinned} отсортированных по полю pinned задач
+   */
+  getSortedTask() {
+    return this.allTask.reduce(
+      (acc, task) => {
+        const key = task.pinned ? 'pinned' : 'unPinned'
+        acc[key].push(task.title)
+        return acc
+      },
+      { pinned: [], unPinned: [] }
+    )
+  }
+
+  /**
+   * Очищает контент контейнеров задач
+   */
+  cleanTasksContent() {
+    this.pinnedContent.innerHTML = ''
+    this.allTasksContent.innerHTML = ''
+  }
+
+  /**
+   * Добавляет на страницу закрепленные задачи
+   * @param {Array} tasks массив задач
+   */
+  showPinnedTasks(tasks) {
+    this.pinnedContent.append(...this.ui.getTasks(tasks))
+  }
+
+  /**
+   * добавляет на страницу сообщение что нет закрепленных задач
+   */
+  showNoPinned() {
+    this.pinnedContent.append(
+      this.ui.getNoTasksElement(styles.noTasks, 'No pinned tasks')
+    )
+  }
+
+  /**
+   * Добавляет на страницу незакрепленные задачи
+   * @param {Array} tasks массив задач
+   */
+  showUnPinnedTasks(tasks) {
+    this.allTasksContent.append(...this.ui.getTasks(tasks))
+  }
+
+  /**
+   * добавляет на страницу сообщение что нет задач
+   */
+  showNoTasks() {
+    this.allTasksContent.append(this.ui.getNoTasksElement(styles.noTasks, 'No tasks'))
   }
 
   /**
