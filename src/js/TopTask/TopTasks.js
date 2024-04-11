@@ -45,19 +45,20 @@ export default class TopTasks {
     this.pinnedContent = this.sectionPinned.querySelector('[class^="content"]')
     this.allTasksContent = this.sectionAllTasks.querySelector('[class^="content"]')
 
-    this.render()
+    this.renderTasks()
   }
 
   addListeners() {
-    this.field.addEventListener('input', this.fieldHandlerInput.bind(this))
-    this.field.addEventListener('keypress', this.fieldHandlerEnter.bind(this))
+    this.field.addEventListener('input', this.onInputField)
+    this.field.addEventListener('keypress', this.onEnterField)
+    this.allTasksContent.addEventListener('click', this.onClickAllTask)
   }
 
   /**
    * Сохраняет содержимое поля ввода в this.fieldValue
    * @param {Event} evt изменение поля ввода
    */
-  fieldHandlerInput(evt) {
+  onInputField = (evt) => {
     this.fieldValue = evt.target.value
   }
 
@@ -66,11 +67,28 @@ export default class TopTasks {
    * Очищает поле ввода и this.fieldValue
    * @param {Event} evt изменение поля ввода
    */
-  fieldHandlerEnter(evt) {
+  onEnterField = (evt) => {
     if (evt.key === 'Enter') {
       this.fieldValue ? this.addTask() : this.showErrorEmpty()
     }
   }
+
+  /**
+   * Клик по кнопке pin задачи делает ее закрепленной
+   * задача перемещается в секцию Pinned
+   * @param {Event} evt клик внутри секции All Tasks
+   */
+  onClickAllTask = (evt) => {
+    const taskEl = evt.target.closest('[class^="task"]')
+    if (taskEl) {
+      const task = this.allTask.find((task) => task.id === taskEl.dataset.id)
+      task.pinned = true
+
+      this.renderTasks()
+    }
+  }
+
+  onClickPinned = (evt) => {}
 
   /**
    * Очищает поле ввода и this.fieldValue
@@ -94,13 +112,14 @@ export default class TopTasks {
   addTask() {
     this.allTask.push(new Task(this.fieldValue))
     this.clearField()
-    this.render()
+    this.renderTasks()
+    console.log('🚀 ~ TopTasks ~ addTask ~ this.allTask:', this.allTask)
   }
 
   /**
    * Отображает на странице данные из массива задач this.allTasks
    */
-  render() {
+  renderTasks() {
     this.cleanTasksContent()
     const { pinned, unPinned } = this.getSortedTask()
     // const pinnedContent = pinned.length ?
@@ -116,7 +135,7 @@ export default class TopTasks {
     return this.allTask.reduce(
       (acc, task) => {
         const key = task.pinned ? 'pinned' : 'unPinned'
-        acc[key].push(task.title)
+        acc[key].push(task)
         return acc
       },
       { pinned: [], unPinned: [] }

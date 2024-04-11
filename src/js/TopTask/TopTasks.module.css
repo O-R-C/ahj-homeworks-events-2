@@ -4,22 +4,10 @@
 }
 
 .app {
-  width: 1000px;
+  width: 600px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
-
-.sectionField {
-  width: 100%;
-}
-
-.sectionPinned {
-  width: 100%;
-}
-
-.sectionAllTasks {
-  width: 100%;
 }
 
 .noTasks {

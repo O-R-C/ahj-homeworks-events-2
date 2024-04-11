@@ -1,0 +1,21 @@
+@value minSize: 20px;
+
+.task {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: minSize;
+}
+
+.button {
+  width: minSize;
+  height: minSize;
+  align-self: start;
+
+  background: rgb(227, 227, 227);
+  border: none;
+  border-radius: 2px;
+  cursor:
+    url('../../../images/pin.png') 5 10,
+    pointer;
+}

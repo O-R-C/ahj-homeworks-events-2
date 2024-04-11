@@ -49,9 +49,7 @@ export default class UiTopTasks {
   }
 
   getTasks(tasks) {
-    const ttt = tasks.reduce((acc, task) => [...acc, this.getTask(task)], [])
-    console.log('🚀 ~ UiTopTasks ~ getTasks ~ ttt:', ttt)
-    return ttt
+    return tasks.reduce((acc, task) => [...acc, this.getTask(task)], [])
   }
 
   /**

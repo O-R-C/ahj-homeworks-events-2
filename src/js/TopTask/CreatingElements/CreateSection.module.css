@@ -8,6 +8,12 @@
   width: 100%;
 }
 
+.sectionPinned button {
+  cursor:
+    url('../../../images/unpin.png') 5 10,
+    pointer;
+}
+
 .sectionAllTasks {
   width: 100%;
 }
@@ -31,4 +37,7 @@
 
 .content {
   min-height: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }

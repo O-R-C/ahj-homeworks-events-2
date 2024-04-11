@@ -1,3 +1,5 @@
+import { nanoid } from 'nanoid'
+
 /**
  * Создает объект задачу
  * @class
@@ -11,5 +13,6 @@ export default class Task {
   constructor(title) {
     this.title = title
     this.pinned = false
+    this.id = nanoid(10)
   }
 }
