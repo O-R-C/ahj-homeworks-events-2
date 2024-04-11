@@ -7,7 +7,6 @@ import styles from './TopTasks.module.css'
  */
 export default class TopTasks {
   allTask = []
-  pinnedTask = []
 
   constructor() {
     this.ui = new UiTopTasks()
@@ -40,6 +39,9 @@ export default class TopTasks {
     body.append(container)
   }
 
+  /**
+   * Ищем и присваиваем элементы
+   */
   addContentElements() {
     this.field = this.sectionField.querySelector('input')
     this.pinnedContent = this.sectionPinned.querySelector('[class^="content"]')
@@ -48,10 +50,14 @@ export default class TopTasks {
     this.renderTasks()
   }
 
+  /**
+   * Добавляем обработчики событий
+   */
   addListeners() {
     this.field.addEventListener('input', this.onInputField)
     this.field.addEventListener('keypress', this.onEnterField)
     this.allTasksContent.addEventListener('click', this.onClickAllTask)
+    this.pinnedContent.addEventListener('click', this.onClickPinned)
   }
 
   /**
@@ -88,7 +94,20 @@ export default class TopTasks {
     }
   }
 
-  onClickPinned = (evt) => {}
+  /**
+   * Клик по кнопке unpin задачи делает ее незакрепленной
+   * задача перемещается в секцию All Tasks
+   * @param {Event} evt клик внутри секции Pinned
+   */
+  onClickPinned = (evt) => {
+    const taskEl = evt.target.closest('[class^="task"]')
+    if (taskEl) {
+      const task = this.allTask.find((task) => task.id === taskEl.dataset.id)
+      task.pinned = false
+
+      this.renderTasks()
+    }
+  }
 
   /**
    * Очищает поле ввода и this.fieldValue
@@ -113,7 +132,6 @@ export default class TopTasks {
     this.allTask.push(new Task(this.fieldValue))
     this.clearField()
     this.renderTasks()
-    console.log('🚀 ~ TopTasks ~ addTask ~ this.allTask:', this.allTask)
   }
 
   /**
@@ -122,7 +140,6 @@ export default class TopTasks {
   renderTasks() {
     this.cleanTasksContent()
     const { pinned, unPinned } = this.getSortedTask()
-    // const pinnedContent = pinned.length ?
 
     pinned.length ? this.showPinnedTasks(pinned) : this.showNoPinned()
     unPinned.length ? this.showUnPinnedTasks(unPinned) : this.showNoTasks()
