@@ -25,8 +25,13 @@ export default class CreateTask extends CreateElement {
     task.textContent = title
     task.dataset.id = id
 
-    const button = this.getElement(styles.button, 'button')
-    task.append(button)
+    const controls = this.getElement(styles.controls)
+
+    const buttonPin = this.getElement([styles.button, styles.buttonPin], 'button')
+    const buttonDel = this.getElement([styles.button, styles.buttonDel], 'button')
+
+    controls.append(buttonPin, buttonDel)
+    task.append(controls)
 
     return task
   }

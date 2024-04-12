@@ -2,7 +2,6 @@ import CreateElement from './CreatingElements/CreateElement'
 import Wrapper from '../Wrapper/Wrapper'
 import CreateTask from './CreatingElements/CreateTask'
 import CreateSection from './CreatingElements/CreateSection'
-import styles from './UiTopTasks.module.css'
 
 /**
  * Создает элементы для интерфейса списка задач

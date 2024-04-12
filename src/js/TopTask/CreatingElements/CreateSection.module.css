@@ -8,7 +8,7 @@
   width: 100%;
 }
 
-.sectionPinned button {
+.sectionPinned button[class*='buttonPin'] {
   cursor:
     url('../../../images/unpin.png') 5 10,
     pointer;

@@ -7,7 +7,7 @@ import data from '../data'
  * список задач
  */
 export default class TopTasks {
-  allTask = []
+  allTasks = []
 
   constructor() {
     this.ui = new UiTopTasks()
@@ -27,7 +27,7 @@ export default class TopTasks {
    */
   async getTasks() {
     const tasks = await data()
-    tasks.forEach((task) => this.allTask.push(new Task(task.title)))
+    tasks.forEach((task) => this.allTasks.push(new Task(task.title)))
     this.renderTasks(tasks)
   }
 
@@ -78,6 +78,9 @@ export default class TopTasks {
    */
   onInputField = (evt) => {
     this.fieldValue = evt.target.value
+
+    if (this.filterTimer) clearTimeout(this.filterTimer)
+    this.filterTimer = setTimeout(() => this.renderTasks(), 300)
   }
 
   /**
@@ -97,13 +100,9 @@ export default class TopTasks {
    * @param {Event} evt клик внутри секции All Tasks
    */
   onClickAllTask = (evt) => {
-    const taskEl = evt.target.closest('[class^="task"]')
-    if (taskEl) {
-      const task = this.allTask.find((task) => task.id === taskEl.dataset.id)
-      task.pinned = true
-
-      this.renderTasks()
-    }
+    const target = evt.target
+    const buttonType = this.getButtonType(target)
+    buttonType && this.buttonsCLickHandler(buttonType, this.getTaskElement(target))
   }
 
   /**
@@ -112,13 +111,61 @@ export default class TopTasks {
    * @param {Event} evt клик внутри секции Pinned
    */
   onClickPinned = (evt) => {
-    const taskEl = evt.target.closest('[class^="task"]')
-    if (taskEl) {
-      const task = this.allTask.find((task) => task.id === taskEl.dataset.id)
-      task.pinned = false
+    const target = evt.target
+    const buttonType = this.getButtonType(target)
+    buttonType && this.buttonsCLickHandler(buttonType, this.getTaskElement(target))
+  }
 
-      this.renderTasks()
-    }
+  /**
+   * Обработчик клика по кнопке в зависимости от ее типа
+   * @param {string} type тип кликнутой кнопки
+   * @param {Element} taskEl элемент задача
+   */
+  buttonsCLickHandler(type, taskEl) {
+    type === 'pin' && this.togglePinned('id', taskEl.dataset.id)
+    type === 'del' && this.deleteTask('id', taskEl.dataset.id)
+
+    this.renderTasks()
+  }
+
+  /**
+   * Определяет тип кликнутой кнопки
+   * @param {Event.target} target элемент цель клика
+   * @returns тип кнопки | undefined
+   */
+  getButtonType(target) {
+    const value = target.classList.value
+    if (value.includes('buttonPin')) return 'pin'
+    if (value.includes('buttonDel')) return 'del'
+  }
+
+  /**
+   * Ищет задачу по кнопке которой кликнули
+   * @param {Event.target} target объект цель события
+   * @returns родителя задачу
+   */
+  getTaskElement(target) {
+    return target.closest('[class^="task"]')
+  }
+
+  /**
+   * Ищет в массиве задач совпадающую по переданному значению,
+   * переключает поле pinned на противоположное
+   * @param {string} key название ключа по которому ищем
+   * @param {string} value нужное значение
+   */
+  togglePinned(key, value) {
+    const task = this.allTasks.find((task) => task[key] === value)
+    task.pinned = !task.pinned
+  }
+
+  /**
+   * Удаляет задачу соответствующую фильтру
+   * @param {string} key название ключа по которому ищем
+   * @param {string} value нужное значение
+   */
+  deleteTask(key, value) {
+    this.allTasks = this.allTasks.filter((task) => task[key] !== value)
   }
 
   /**
@@ -141,7 +188,7 @@ export default class TopTasks {
    * Добавляет задачу в массив this.allTasks
    */
   addTask() {
-    this.allTask.push(new Task(this.fieldValue))
+    this.allTasks.push(new Task(this.fieldValue))
 
     this.clearField()
     this.renderTasks()
@@ -162,7 +209,7 @@ export default class TopTasks {
    * @returns объект {pinned, unPinned} отсортированных по полю pinned задач
    */
   getSortedTask() {
-    return this.allTask.reduce(
+    return this.allTasks.reduce(
       (acc, task) => {
         const key = task.pinned ? 'pinned' : 'unPinned'
         acc[key].push(task)
@@ -202,14 +249,33 @@ export default class TopTasks {
    * @param {Array} tasks массив задач
    */
   showUnPinnedTasks(tasks) {
-    this.allTasksContent.append(...this.ui.getTasks(tasks))
+    const filteredTasks = this.getFilteredTasks(tasks)
+
+    filteredTasks.length
+      ? this.allTasksContent.append(...this.ui.getTasks(filteredTasks))
+      : this.showNoTasks(' found')
+  }
+
+  /**
+   * Фильтрует задачи по значению поля ввода
+   * @param {Array} tasks массив задач
+   * @returns массив задач отфильтрованных по значению поля ввода
+   */
+  getFilteredTasks(tasks) {
+    const filteredTasks = this.fieldValue
+      ? tasks.filter((task) => task.title.startsWith(this.fieldValue))
+      : tasks
+
+    return filteredTasks
   }
 
   /**
    * добавляет на страницу сообщение что нет задач
    */
-  showNoTasks() {
-    this.allTasksContent.append(this.ui.getNoTasksElement(styles.noTasks, 'No tasks'))
+  showNoTasks(text) {
+    this.allTasksContent.append(
+      this.ui.getNoTasksElement(styles.noTasks, `No tasks${text}`)
+    )
   }
 
   /**

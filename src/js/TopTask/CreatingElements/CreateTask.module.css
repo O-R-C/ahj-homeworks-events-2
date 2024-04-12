@@ -8,6 +8,11 @@
   min-height: minSize;
 }
 
+.controls {
+  display: flex;
+  gap: 10px;
+}
+
 .button {
   width: minSize;
   height: minSize;
@@ -16,7 +21,16 @@
   background: rgb(227, 227, 227);
   border: none;
   border-radius: 2px;
+
+  cursor: pointer;
+}
+
+.buttonPin {
   cursor:
     url('../../../images/pin.png') 5 10,
     pointer;
+}
+
+.buttonDel {
+  background: center / contain no-repeat url('../../../images/delete.png');
 }
