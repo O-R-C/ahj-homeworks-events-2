@@ -273,8 +273,9 @@ export default class TopTasks {
    * добавляет на страницу сообщение что нет задач
    */
   showNoTasks(text) {
+    const addedText = text ? text : ''
     this.allTasksContent.append(
-      this.ui.getNoTasksElement(styles.noTasks, `No tasks${text}`)
+      this.ui.getNoTasksElement(styles.noTasks, `No tasks${addedText}`)
     )
   }
 
