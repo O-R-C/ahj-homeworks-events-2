@@ -1,6 +1,7 @@
 import UiTopTasks from './UiTopTasks'
 import Task from '../Task/Task'
 import styles from './TopTasks.module.css'
+import data from '../data'
 
 /**
  * список задач
@@ -17,6 +18,17 @@ export default class TopTasks {
     this.addUI()
     this.addContentElements()
     this.addListeners()
+
+    this.getTasks()
+  }
+
+  /**
+   * Получает фейковые задачи
+   */
+  async getTasks() {
+    const tasks = await data()
+    tasks.forEach((task) => this.allTask.push(new Task(task.title)))
+    this.renderTasks(tasks)
   }
 
   /**
@@ -130,6 +142,7 @@ export default class TopTasks {
    */
   addTask() {
     this.allTask.push(new Task(this.fieldValue))
+
     this.clearField()
     this.renderTasks()
   }

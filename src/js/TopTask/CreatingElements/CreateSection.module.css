@@ -36,7 +36,7 @@
 }
 
 .content {
-  min-height: 50px;
+  min-height: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
